@@ -1,0 +1,8 @@
+# Optional: image to run ETL outside Airflow (for K8s)
+FROM python:3.11-slim
+WORKDIR /app
+COPY etl/ etl/
+COPY data/ data/
+RUN pip install pandas psycopg2-binary
+ENV PGHOST=postgres PGPORT=5432 PGUSER=warehouse PGPASSWORD=warehouse PGDATABASE=warehouse
+CMD ["python", "etl/extract.py"]

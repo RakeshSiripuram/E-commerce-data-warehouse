@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+#Pyhton
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+#Airflow / local state
+logs/
+airflow.db
+.unittest_results/
+#Docker
+*.log

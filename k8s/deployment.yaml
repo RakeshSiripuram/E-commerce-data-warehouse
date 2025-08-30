@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: etl-job
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: etl-job
+  template:
+    metadata:
+      labels:
+        app: etl-job
+    spec:
+      containers:
+      - name: etl
+        image: your-dockerhub-username/ecommerce-etl:latest
+        env:
+        - name: PGHOST
+          value: "postgres.default.svc.cluster.local"
+        - name: PGPORT
+          value: "5432"
+        - name: PGUSER
+          value: "warehouse"
+        - name: PGPASSWORD
+          value: "warehouse"
+        - name: PGDATABASE
+          value: "warehouse"
+        command: ["python","etl/extract.py"]

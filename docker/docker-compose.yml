@@ -1,0 +1,34 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: warehouse
+      POSTGRES_USER: warehouse
+      POSTGRES_PASSWORD: warehouse
+    ports:
+      - "5433:5432"
+    volumes:
+      - ../warehouse:/docker-entrypoint-initdb.d
+  airflow:
+    image: apache/airflow:2.9.3
+    environment:
+      - PYTHONPATH=/opt/airflow
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__WEBSERVER__SECRET_KEY=devkey
+      - _PIP_ADDITIONAL_REQUIREMENTS=psycopg2-binary pandas
+      - PGHOST=postgres
+      - PGPORT=5432
+      - PGUSER=warehouse
+      - PGPASSWORD=warehouse
+      - PGDATABASE=warehouse
+      - SALES_PATH=/opt/airflow/data/sales.csv
+      - INVENTORY_PATH=/opt/airflow/data/inventory.csv
+    command: bash -c "airflow db init && airflow users create --username airflow --password airflow --firstname Air --lastname Flow --role Admin --email admin@example.com || true && airflow webserver & airflow scheduler"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    volumes:
+      - ../airflow/dags:/opt/airflow/dags
+      - ../etl:/opt/airflow/etl
+      - ../data:/opt/airflow/data
