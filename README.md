@@ -25,8 +25,7 @@ docker compose up -d
 ```
 3) Open Airflow: http://localhost:8080 (user: airflow / pass: airflow)
 4) Turn on `etl_ecommerce_daily` DAG.
-5) Connect to Postgres (localhost:5433, db: warehouse, user: warehouse, pass: warehouse) and run queries from `warehouse/schema.sql` and `warehouse/indexes.sql` (Airflow init will create tables automatically on first run).
-
+5) Connect to Postgres (localhost:5433, db: warehouse, user: warehouse, pass: warehouse) and run queries from `warehouse/01_schema.sql` and `warehouse/02_indexes.sql` (Airflow init will create tables automatically on first run).
 ## Repo Layout
 ```
 ecommerce-data-warehouse/
@@ -43,8 +42,12 @@ ecommerce-data-warehouse/
 ├─ k8s/deployment.yaml       # optional K8s deploy for ETL image
 └─ README.md
 ```
+## Verify
+Connect to Postgres and run:
 
-## Next Steps (nice-to-have)
-- Swap Pandas for **PySpark** to mimic Glue.
-- Add **dbt** models on top of Postgres.
-- Publish a short demo video & link it here.
+```sql
+SELECT COUNT(*) FROM fact_sales;
+SELECT COUNT(*) FROM fact_inventory;
+SELECT * FROM agg_sales_daily ORDER BY sale_date DESC, store_id LIMIT 10;
+
+
