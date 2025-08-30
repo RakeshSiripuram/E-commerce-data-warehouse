@@ -23,3 +23,19 @@ docker compose up -d
 SELECT COUNT(*) FROM fact_sales;
 SELECT COUNT(*) FROM fact_inventory;
 SELECT * FROM agg_sales_daily ORDER BY sale_date DESC, store_id LIMIT 10;
+
+## Troubleshooting
+ Airflow UI won't load:
+docker compose run --rm airflow airflow db init
+# then restart
+docker compose up -d
+
+## 	Port conflicts (e.g., 8080 or 5433) — change in docker/docker-compose.yml:
+
+ports:
+  - "8081:8080"
+  - "5434:5432"
+
+Then: docker compose down -v && docker compose up -d
+
+
