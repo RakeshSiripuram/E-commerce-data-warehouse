@@ -17,3 +17,9 @@ CSV → **Extract → Transform → Load** → PostgreSQL
 ```bash
 cd docker
 docker compose up -d
+
+## Verify
+
+SELECT COUNT(*) FROM fact_sales;
+SELECT COUNT(*) FROM fact_inventory;
+SELECT * FROM agg_sales_daily ORDER BY sale_date DESC, store_id LIMIT 10;
